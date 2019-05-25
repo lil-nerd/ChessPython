@@ -49,13 +49,17 @@ class Desk:
         
         if Desk.step_status:
             
-            if check_figure(self, number):
+            if check_figure(self, number, Desk.current_player):
+                
                 Desk.step_status = not Desk.step_status
                 Desk.selected_figure = number
+                Desk.btn_array[number].config(background= "green")
+                
                 
         else:
             
-            if check_step(self, Desk.selected_figure, number):
+            if check_step(self, Desk.selected_figure, number, Desk.current_player):
+                
                 self.chess_field[number] = self.chess_field[Desk.selected_figure]
                 Desk.btn_array[number].config(text= self.chess_field[number].get_symbol())
             
@@ -64,9 +68,12 @@ class Desk:
                 figure.place_figure(Desk.selected_figure)
                 self.chess_field[Desk.selected_figure] = figure
                 
-                Desk.btn_array[Desk.selected_figure].config(text= self.chess_field[Desk.selected_figure].get_symbol())
+                cell_colors = ["white", "grey"]
+                Desk.btn_array[Desk.selected_figure].config(text= self.chess_field[Desk.selected_figure].get_symbol(), background= cell_colors[(Desk.selected_figure // 8 + Desk.selected_figure % 8 ) % 2])
             
                 Desk.step_status = not Desk.step_status
+                Desk.current_player = Desk.current_player * (-1)
+                print(Desk.selected_figure)
             
         
         
@@ -92,6 +99,7 @@ class Desk:
                 b = not b
             b = not b
 
+        
  
         root.mainloop()
     
