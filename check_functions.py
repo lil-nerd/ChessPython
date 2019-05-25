@@ -1,6 +1,6 @@
 from desk import *
 
-def check_figure(desk, number):
+def check_figure(desk, number, current_player):
     
     if desk.chess_field[number].get_symbol() == ' ':
         print("Go")
@@ -9,7 +9,7 @@ def check_figure(desk, number):
     else:
         return True
 
-def check_step(desk, now, future):
+def check_step(desk, now, future, current_player):
     if now == future:
         return False
     else:
