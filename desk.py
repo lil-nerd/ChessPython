@@ -9,9 +9,11 @@ from check_functions import *
 class Desk:
 
     btn_array = []
-    selected_figure = -1  
+    selected_figure = -1
+    selected_last_step = -1
     current_player = 1
     step_status = True
+    number_of_steps = 0
     
     def __init__(self):
         self.chess_field = []
@@ -45,35 +47,61 @@ class Desk:
         
         
         
+    def make_move_first(self, number):
+       
+        Desk.step_status = not Desk.step_status
+        cell_colors = ["white", "grey"]
+        
+        Desk.btn_array[Desk.selected_figure].config(text= self.chess_field[Desk.selected_figure].get_symbol(), background= cell_colors[(Desk.selected_figure // 8 + Desk.selected_figure % 8 ) % 2])
+        Desk.btn_array[Desk.selected_last_step].config(text= self.chess_field[Desk.selected_last_step].get_symbol(), background= cell_colors[(Desk.selected_last_step // 8 + Desk.selected_last_step % 8 ) % 2])
+        Desk.selected_figure = number
+        Desk.btn_array[number].config(background= "green")
+        
+        
+        
+    def make_move_second(self, number):
+        
+        self.chess_field[number] = self.chess_field[Desk.selected_figure]
+        Desk.btn_array[number].config(text= self.chess_field[number].get_symbol(), background= "orange")
+        
+        
+        figure = Figure()
+        figure.place_figure(Desk.selected_figure)
+        self.chess_field[Desk.selected_figure] = figure
+                
+        
+        Desk.btn_array[Desk.selected_figure].config(text= self.chess_field[Desk.selected_figure].get_symbol(), background= "orange")
+        
+        Desk.selected_last_step = number
+        Desk.step_status = not Desk.step_status
+        Desk.current_player = Desk.current_player * (-1)
+        
+        print(Desk.selected_figure)
+        
+        
+        
     def make_move(self, number):
         
+        cell_colors = ["white", "grey"]
+        print(number)
         if Desk.step_status:
             
             if check_figure(self, number, Desk.current_player):
                 
-                Desk.step_status = not Desk.step_status
-                Desk.selected_figure = number
-                Desk.btn_array[number].config(background= "green")
-                
+                self.make_move_first(number)                
                 
         else:
             
             if check_step(self, Desk.selected_figure, number, Desk.current_player):
                 
-                self.chess_field[number] = self.chess_field[Desk.selected_figure]
-                Desk.btn_array[number].config(text= self.chess_field[number].get_symbol())
-            
-            
-                figure = Figure()
-                figure.place_figure(Desk.selected_figure)
-                self.chess_field[Desk.selected_figure] = figure
+                self.make_move_second(number)
                 
-                cell_colors = ["white", "grey"]
+            else:
+                
                 Desk.btn_array[Desk.selected_figure].config(text= self.chess_field[Desk.selected_figure].get_symbol(), background= cell_colors[(Desk.selected_figure // 8 + Desk.selected_figure % 8 ) % 2])
-            
                 Desk.step_status = not Desk.step_status
-                Desk.current_player = Desk.current_player * (-1)
-                print(Desk.selected_figure)
+                
+                
             
         
         
